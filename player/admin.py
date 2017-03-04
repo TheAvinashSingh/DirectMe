@@ -12,6 +12,6 @@ admin.site.register(Inventory, InventoryModelAdmin)
 
 class ProfileModelAdmin(admin.ModelAdmin):
     list_display = ('user', 'experience', 'island', 'fcm_token', 'cumulative_ship_level', 'last_seen')
-    
+
 
 admin.site.register(Profile, ProfileModelAdmin)
