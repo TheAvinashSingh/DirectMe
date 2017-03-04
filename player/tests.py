@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core.models import Island
+from player.cron_job import update_leaderboard
 from player.models import Profile
 
 
@@ -281,3 +282,32 @@ class UsernameSearchTest(APITestCase):
         self.assertEqual(response.data['email'], user.email)
         self.assertEqual(response.data['first_name'], "")
         self.assertEqual(response.data['last_name'], "")
+
+
+class LeaderboardTest(APITestCase):
+    url = reverse('player:leaderboard')
+
+    def test_leaderboard(self):
+        user1 = User.objects.create_user(username='some_username', password='some_password',
+                                         email='some_email@gmail.com')
+        profile1 = Profile.objects.create_player(username='some_username')
+
+        user2 = User.objects.create_user(username='some_username2', password='some_password',
+                                         email='some_email2@gmail.com')
+        profile2 = Profile.objects.create_player(username='some_username2')
+
+        profile1.points = 1
+        profile1.save()
+        profile2.points = 2
+        profile2.save()
+
+        update_leaderboard()
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token {}'.format(user1.auth_token.key))
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['username'], 'some_username2')
+        self.assertEqual(response.data[0]['rank'], 1)
+        self.assertEqual(response.data[1]['username'], 'some_username')
+        self.assertEqual(response.data[1]['rank'], 2)
