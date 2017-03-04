@@ -4,10 +4,19 @@ from random import randint
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
+from django.utils import timezone
 from rest_framework.authtoken.models import Token
 
 from core.models import Item, Island, Port, Dock
 from core.models import Item, ShipStore
+
+
+class Leaderboard(models.Model):
+    rank = models.IntegerField()
+    profile = models.ForeignKey('Profile')
+
+    def __str__(self):
+        return "#{0} {1}".format(self.rank, self.profile.user.username)
 
 
 class ProfileModelManager(models.Manager):
@@ -58,6 +67,7 @@ class Profile(models.Model):
     island = models.ForeignKey(Island, default=None, null=True)
     fcm_token = models.CharField(max_length=255, default=None, null=True, unique=True)
     points = models.DecimalField(default=0.0, max_digits=12, decimal_places=10)
+    points_update_timestamp = models.DateTimeField(default=timezone.now)
     objects = ProfileModelManager()
 
     def save(self, force_insert=False, force_update=False, using=None,

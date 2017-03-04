@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Inventory, Profile
+from .models import Inventory, Profile, Leaderboard
 
 
 class InventoryModelAdmin(admin.ModelAdmin):
@@ -15,3 +15,5 @@ class ProfileModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile, ProfileModelAdmin)
+
+admin.site.register(Leaderboard)

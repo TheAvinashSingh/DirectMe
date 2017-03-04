@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'fcm_django',
     'storages',
     'opbeat.contrib.django',
+    'django_crontab',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -189,3 +190,8 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+
+
+CRONJOBS = [
+    ('*/1 * * * *', 'player.cron_job.update_leaderboard')
+]
