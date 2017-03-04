@@ -14,7 +14,7 @@ from social_django.utils import psa
 
 from core.models import Port, DockChart
 from core.serializers import SuggestionListSerializer
-from player.models import Profile
+from player.models import Profile, Leaderboard
 from player.serializers import SocialSerializer, LeaderboardSerializer
 
 
@@ -96,11 +96,11 @@ from player.serializers import UserRegistrationSerializer, UserAuthenticationSer
     UserPasswordSerializer, UserProfileSerializer, UserSearchSerializer
 
 
-class LeaderBoardView(generics.ListAPIView):
+class LeaderboardView(generics.ListAPIView):
     """
     Shows the leaderboard
     """
-    queryset = Profile.objects.raw("SELECT id, RANK() over (ORDER BY points DESC ) as rank  FROM player_profile ;")
+    queryset = Leaderboard.objects.order_by('rank')
     serializer_class = LeaderboardSerializer
     paginate_by = 25
 

@@ -17,20 +17,20 @@ class LeaderboardSerializer(serializers.Serializer):
     gravatar = serializers.SerializerMethodField()
 
     def get_username(self, obj):
-        return obj.user.username
+        return obj.profile.user.username
 
     def get_first_name(self, obj):
-        return obj.user.first_name
+        return obj.profile.user.first_name
 
     def get_last_name(self, obj):
-        return obj.user.last_name
+        return obj.profile.user.last_name
 
     def get_rank(self, obj):
         return obj.rank
 
     def get_gravatar(self, obj):
         return "https://www.gravatar.com/avatar/%s?%s" % (
-            hashlib.md5(obj.user.email.lower().encode('utf-8')).hexdigest(),
+            hashlib.md5(obj.profile.user.email.lower().encode('utf-8')).hexdigest(),
             urllib.parse.urlencode({'s': str(40), 'd': 'identicon'})
         )
 
