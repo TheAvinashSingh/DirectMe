@@ -11,6 +11,16 @@ from core.models import Item, Island, Port, Dock
 from core.models import Item, ShipStore
 
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name='notifications')
+    body = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now)
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.body
+
+
 class ProfileModelManager(models.Manager):
     def create_player(self, username):
         user = User.objects.get(
