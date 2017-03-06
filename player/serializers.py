@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from core.serializers import InventorySerializer
-from .models import Profile
+from .models import Profile, Notification
 
 
 class LeaderboardSerializer(serializers.Serializer):
@@ -34,9 +34,15 @@ class LeaderboardSerializer(serializers.Serializer):
             urllib.parse.urlencode({'s': str(40), 'd': 'identicon'})
         )
 
-    # class Meta:
-    #     model = Profile
-    #     fields = ('username', 'first_name', 'last_name', 'rank', 'gravatar')
+        # class Meta:
+        #     model = Profile
+        #     fields = ('username', 'first_name', 'last_name', 'rank', 'gravatar')
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ('body', 'timestamp', 'read')
 
 
 class SocialSerializer(serializers.Serializer):

@@ -2,7 +2,6 @@ from random import randint
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.utils import timezone
 from requests.exceptions import HTTPError
 from rest_framework import generics
 from rest_framework import status
@@ -15,8 +14,8 @@ from social_django.utils import psa
 
 from core.models import Port, DockChart
 from core.serializers import SuggestionListSerializer
-from player.models import Profile
-from player.serializers import SocialSerializer, LeaderboardSerializer
+from player.models import Profile, Notification
+from player.serializers import SocialSerializer, LeaderboardSerializer, NotificationSerializer
 
 
 @api_view(http_method_names=['POST'])
@@ -106,6 +105,14 @@ class LeaderBoardView(generics.ListAPIView):
     paginate_by = 25
 
 
+class NotificationView(generics.ListAPIView):
+    serializer_class = NotificationSerializer
+    pagination_by = 10
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by('timestamp')
+
+
 class UserRegistrationView(APIView):
     """
     Register a new user
@@ -146,7 +153,6 @@ class UserView(APIView):
     serializer_class = UserProfileSerializer
 
     def get(self, request, *args, **kwargs):
-
         profile = request.user.profile
         Profile.objects.update_last_seen(profile)
 

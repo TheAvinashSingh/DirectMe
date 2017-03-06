@@ -11,11 +11,18 @@ from core.models import Item, Island, Port, Dock
 from core.models import Item, ShipStore
 
 
+class NotificationModelManager(models.Manager):
+    def send(self, user, body):
+        notif = Notification.objects.create(user=user, body=body)
+        # TODO: Send this via FCM to mobile devices
+
+
 class Notification(models.Model):
     user = models.ForeignKey(User, related_name='notifications')
     body = models.TextField()
     timestamp = models.DateTimeField(default=timezone.now)
     read = models.BooleanField(default=False)
+    objects = NotificationModelManager()
 
     def __str__(self):
         return self.body
